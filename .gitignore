@@ -1,0 +1,79 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Android Studio and IntelliJ IDEA
+*.iml
+.idea/
+.gradle/
+build/
+local.properties
+
+# Generated files
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+bin/
+gen/
+out/
+
+# Gradle
+.gradle
+build/
+.gradle/
+
+# Log files
+*.log
+
+# Dependency directories
+libs/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.ncb
+*.suo
+
+# Android Studio navigation
+.navigation/
+
+# Proguard
+proguard/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Sensitive data
+secrets.properties
+google-services.json
+keystore.properties
+
+# Miscellaneous
+*.cache
+*.bin
+captures/
+externalNativeBuild/
+.cxx/
