@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="36dp"
+    >
+
+    <Button
+        android:id="@+id/addVocabButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Vocabulary" />
+
+    <Button
+        android:id="@+id/learnButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Learn Flashcards"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/testButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Take Test"
+        android:layout_marginTop="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vocabRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="36dp">
+
+    <EditText
+        android:id="@+id/englishEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="English word" />
+
+    <EditText
+        android:id="@+id/vietnameseEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Vietnamese meaning"
+        android:layout_marginTop="16dp"
+        />
+
+    <Button
+        android:id="@+id/saveVocabButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Vocabulary"
+        android:layout_marginTop="16dp"
+        />
+
+</LinearLayout>

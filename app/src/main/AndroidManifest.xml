@@ -21,6 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AddTopicActivity" />
+        <activity android:name=".VocabularyListActivity" />
+        <activity android:name=".AddVocabularyActivity" />
+        <activity android:name=".FlashcardActivity" />
+        <activity android:name=".TestActivity" />
     </application>
 
 </manifest>
