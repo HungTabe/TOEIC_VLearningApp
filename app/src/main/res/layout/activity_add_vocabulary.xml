@@ -8,13 +8,13 @@
     <EditText
         android:id="@+id/englishEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:hint="English word" />
 
     <EditText
         android:id="@+id/vietnameseEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:hint="Vietnamese meaning"
         android:layout_marginTop="16dp"
         />
