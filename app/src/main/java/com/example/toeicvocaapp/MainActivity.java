@@ -3,6 +3,7 @@ package com.example.toeicvocaapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TopicAdapter adapter;
     private DatabaseHelper db;
+    private TextView textViewWelcome;
+    private Button buttonClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        //        prepare code
         db = new DatabaseHelper(this);
 
         db.initFromJson(this); // Nạp dữ liệu từ JSON
@@ -51,7 +53,17 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        //        end
+        textViewWelcome = findViewById(R.id.textViewWelcome);
+        buttonClose = findViewById(R.id.buttonClose);
+
+        // get data from intent LoginActivity
+        String name = getIntent().getStringExtra("name");
+        textViewWelcome.setText("Welcome, " + name + "!");
+
+        buttonClose.setOnClickListener(v -> {
+            finishAffinity(); // Close
+        });
+
     }
 
     @Override

@@ -6,6 +6,19 @@
     android:layout_margin="30dp"
     android:id="@+id/main">
 
+    <TextView
+        android:id="@+id/textViewWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome!"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/buttonClose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Close App" />
+
     <Button
         android:id="@+id/addTopicButton"
         android:layout_width="match_parent"
