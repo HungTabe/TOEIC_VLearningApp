@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
 import com.example.toeicvocaapp.R;
+import com.example.toeicvocaapp.model.Topic;
 import com.example.toeicvocaapp.model.Vocabulary;
 
 import org.json.JSONArray;
@@ -76,12 +77,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Lấy danh sách chủ đề
-    public List<String> getAllTopics() {
-        List<String> topics = new ArrayList<>();
+    public List<Topic> getAllTopics() {
+        List<Topic> topics = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(TABLE_TOPICS, new String[]{COL_NAME}, null, null, null, null, null);
+        Cursor cursor = db.query(TABLE_TOPICS, new String[]{COL_ID, COL_NAME}, null, null, null, null, null);
         while (cursor.moveToNext()) {
-            topics.add(cursor.getString(0));
+            topics.add(new Topic(cursor.getInt(0), cursor.getString(1)));
         }
         cursor.close();
         db.close();
@@ -133,6 +134,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return count;
+    }
+
+    public List<Vocabulary> getLearnedWords(int topicId) {
+        List<Vocabulary> learnedWords = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT v." + COL_ID + ", v." + COL_ENGLISH + ", v." + COL_VIETNAMESE +
+                " FROM " + TABLE_VOCAB + " v INNER JOIN " + TABLE_PROGRESS + " p ON v." + COL_ID + "=p." + COL_WORD_ID +
+                " WHERE v." + COL_TOPIC_ID + "=?", new String[]{String.valueOf(topicId)});
+        while (cursor.moveToNext()) {
+            learnedWords.add(new Vocabulary(cursor.getInt(0), cursor.getString(1), cursor.getString(2)));
+        }
+        cursor.close();
+        db.close();
+        return learnedWords;
     }
 
     public void initFromJson(Context context) {
