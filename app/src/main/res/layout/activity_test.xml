@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="36dp">
+
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="20sp" />
+
+    <RadioGroup
+        android:layout_marginTop="16dp"
+        android:id="@+id/answerGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton android:id="@+id/option1" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <RadioButton android:id="@+id/option2" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <RadioButton android:id="@+id/option3" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <RadioButton android:id="@+id/option4" android:layout_width="match_parent" android:layout_height="wrap_content" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit" />
+
+</LinearLayout>
