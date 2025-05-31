@@ -5,9 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
+import com.example.toeicvocaapp.R;
 import com.example.toeicvocaapp.model.Vocabulary;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,4 +134,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return count;
     }
+
+    public void initFromJson(Context context) {
+        try {
+            SQLiteDatabase db = getReadableDatabase();
+            Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_TOPICS, null);
+            cursor.moveToFirst();
+            if (cursor.getInt(0) > 0) { // Không thêm nếu đã có dữ liệu
+                cursor.close();
+                db.close();
+                return;
+            }
+            cursor.close();
+
+            // Đọc file JSON từ res/raw
+            InputStream is = context.getResources().openRawResource(R.raw.sample_data);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+
+            // Phân tích JSON
+            JSONArray jsonArray = new JSONArray(json);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject topicObj = jsonArray.getJSONObject(i);
+                String topicName = topicObj.getString("topic");
+                addTopic(topicName);
+                int topicId = i + 1; // Giả sử ID bắt đầu từ 1
+
+                JSONArray words = topicObj.getJSONArray("words");
+                for (int j = 0; j < words.length(); j++) {
+                    JSONObject word = words.getJSONObject(j);
+                    String english = word.getString("english");
+                    String vietnamese = word.getString("vietnamese");
+                    addVocabulary(topicId, english, vietnamese);
+                }
+            }
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error loading JSON: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
 }
+
+

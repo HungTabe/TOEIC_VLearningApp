@@ -38,9 +38,7 @@ public class MainActivity extends AppCompatActivity {
         //        prepare code
         db = new DatabaseHelper(this);
 
-        db.addTopic("Business");
-        db.addVocabulary(1, "contract", "hợp đồng");
-        db.addVocabulary(1, "meeting", "cuộc họp");
+        db.initFromJson(this); // Nạp dữ liệu từ JSON
 
         recyclerView = findViewById(R.id.topicRecyclerView);
         Button addTopicButton = findViewById(R.id.addTopicButton);
