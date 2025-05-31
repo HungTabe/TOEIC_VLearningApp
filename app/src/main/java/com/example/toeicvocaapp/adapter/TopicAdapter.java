@@ -1,4 +1,4 @@
-package com.example.toeicvocaapp;
+package com.example.toeicvocaapp.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

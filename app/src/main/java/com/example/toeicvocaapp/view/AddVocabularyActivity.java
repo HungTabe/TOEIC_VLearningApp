@@ -1,4 +1,4 @@
-package com.example.toeicvocaapp;
+package com.example.toeicvocaapp.view;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -6,6 +6,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.toeicvocaapp.R;
 import com.example.toeicvocaapp.db.DatabaseHelper;
 
 public class AddVocabularyActivity extends AppCompatActivity {

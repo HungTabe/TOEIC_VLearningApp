@@ -1,4 +1,4 @@
-package com.example.toeicvocaapp;
+package com.example.toeicvocaapp.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.toeicvocaapp.R;
+import com.example.toeicvocaapp.adapter.VocabularyAdapter;
 import com.example.toeicvocaapp.db.DatabaseHelper;
 import com.example.toeicvocaapp.model.Vocabulary;
 

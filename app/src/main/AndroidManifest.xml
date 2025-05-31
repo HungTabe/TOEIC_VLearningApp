@@ -13,10 +13,10 @@
         android:theme="@style/Theme.TOEICVocaApp"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".view.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,11 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddTopicActivity" />
-        <activity android:name=".VocabularyListActivity" />
-        <activity android:name=".AddVocabularyActivity" />
-        <activity android:name=".FlashcardActivity" />
-        <activity android:name=".TestActivity" />
+        <activity android:name=".view.AddTopicActivity" />
+        <activity android:name=".view.VocabularyListActivity" />
+        <activity android:name=".view.AddVocabularyActivity" />
+        <activity android:name=".view.FlashcardActivity" />
+        <activity android:name=".view.TestActivity" />
     </application>
 
 </manifest>
