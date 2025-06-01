@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.toeicvocaapp.R;
 import com.example.toeicvocaapp.db.DatabaseHelper;
@@ -17,11 +18,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.example.toeicvocaapp.viewmodel.VocabularyViewModel;
+import com.google.android.material.card.MaterialCardView;
+
 public class FlashcardActivity extends AppCompatActivity {
     private TextView wordText;
     private EditText inputAnswer;
     private Button flipButton, checkButton, nextButton;
-    private DatabaseHelper db;
+    private MaterialCardView flashcardView; // Khai báo biến flashcardView
+    private VocabularyViewModel viewModel;
     private List<Vocabulary> vocabList;
     private int currentIndex = 0;
     private boolean isEnglishToVietnamese = true;
@@ -32,35 +37,51 @@ public class FlashcardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashcard);
 
+        // Ánh xạ các view
         wordText = findViewById(R.id.wordText);
         inputAnswer = findViewById(R.id.inputAnswer);
         flipButton = findViewById(R.id.flipButton);
         checkButton = findViewById(R.id.checkButton);
         nextButton = findViewById(R.id.nextButton);
-        db = new DatabaseHelper(this);
+        flashcardView = findViewById(R.id.flashcardView); // Ánh xạ flashcardView
         topicId = getIntent().getIntExtra("topic_id", -1);
 
-        // Kiểm tra giới hạn 10 từ/ngày
-        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        if (db.countWordsToday(today) >= 10) {
-            Toast.makeText(this, "You've learned 10 words today!", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
+        viewModel = new ViewModelProvider(this).get(VocabularyViewModel.class);
+        viewModel.loadVocabByTopic(topicId);
+        viewModel.getVocabList().observe(this, vocab -> {
+            vocabList = vocab;
+            if (vocabList.isEmpty()) {
+                Toast.makeText(this, "No vocabulary available!", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+            showWord();
+        });
 
-        vocabList = db.getVocabByTopic(topicId);
-        if (vocabList.isEmpty()) {
-            Toast.makeText(this, "No vocabulary available!", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
-        showWord();
+        viewModel.getTodayWordCount().observe(this, count -> {
+            if (count >= 10) {
+                Toast.makeText(this, "You've learned 10 words today!", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
 
         flipButton.setOnClickListener(v -> {
             Vocabulary vocab = vocabList.get(currentIndex);
             wordText.setText(isEnglishToVietnamese ? vocab.getVietnamese() : vocab.getEnglish());
             isEnglishToVietnamese = !isEnglishToVietnamese;
+
+            // Hiệu ứng lật
+            flashcardView.animate()
+                    .rotationY(90)
+                    .setDuration(200)
+                    .withEndAction(() -> {
+                        flashcardView.setRotationY(-90);
+                        flashcardView.animate()
+                                .rotationY(0)
+                                .setDuration(200)
+                                .start();
+                    })
+                    .start();
         });
 
         checkButton.setOnClickListener(v -> {
@@ -75,10 +96,10 @@ public class FlashcardActivity extends AppCompatActivity {
         });
 
         nextButton.setOnClickListener(v -> {
-            db.addProgress(vocabList.get(currentIndex).getId(), today);
+            viewModel.addProgress(vocabList.get(currentIndex).getId());
             currentIndex++;
-            if (currentIndex >= vocabList.size() || db.countWordsToday(today) >= 10) {
-                Toast.makeText(this, "Done for today!", Toast.LENGTH_SHORT).show();
+            if (currentIndex >= vocabList.size()) {
+                Toast.makeText(this, "No more words!", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
                 showWord();

@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.toeicvocaapp.R;
 import com.example.toeicvocaapp.model.Vocabulary;
 
 import java.util.List;
@@ -21,15 +22,15 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_2, parent, false);
+                .inflate(R.layout.item_vocabulary, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Vocabulary vocab = vocabList.get(position);
-        holder.text1.setText(vocab.getEnglish());
-        holder.text2.setText(vocab.getVietnamese());
+        holder.englishTextView.setText(vocab.getEnglish());
+        holder.vietnameseTextView.setText(vocab.getVietnamese());
     }
 
     @Override
@@ -38,12 +39,12 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView text1, text2;
+        TextView englishTextView, vietnameseTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            text1 = itemView.findViewById(android.R.id.text1);
-            text2 = itemView.findViewById(android.R.id.text2);
+            englishTextView = itemView.findViewById(R.id.englishTextView);
+            vietnameseTextView = itemView.findViewById(R.id.vietnameseTextView);
         }
     }
 }

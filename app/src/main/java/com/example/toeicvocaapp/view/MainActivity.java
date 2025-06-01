@@ -18,6 +18,7 @@ import com.example.toeicvocaapp.R;
 import com.example.toeicvocaapp.adapter.TopicAdapter;
 import com.example.toeicvocaapp.db.DatabaseHelper;
 import com.example.toeicvocaapp.viewmodel.TopicViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton; // Thêm import này
 
 import java.util.List;
 
@@ -33,8 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.topicRecyclerView);
-        Button addTopicButton = findViewById(R.id.addTopicButton);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        FloatingActionButton addTopicButton = findViewById(R.id.addTopicButton); // Sửa từ Button thành FloatingActionButton        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         viewModel = new ViewModelProvider(this).get(TopicViewModel.class);
         viewModel.initFromJson();
