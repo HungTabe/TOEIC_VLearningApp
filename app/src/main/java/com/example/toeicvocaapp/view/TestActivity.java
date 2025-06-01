@@ -1,4 +1,4 @@
-package com.example.toeicvocaapp;
+package com.example.toeicvocaapp.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.toeicvocaapp.R;
 import com.example.toeicvocaapp.db.DatabaseHelper;
 import com.example.toeicvocaapp.model.Vocabulary;
 

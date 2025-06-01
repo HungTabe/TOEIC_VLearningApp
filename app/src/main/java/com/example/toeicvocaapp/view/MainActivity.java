@@ -1,4 +1,4 @@
-package com.example.toeicvocaapp;
+package com.example.toeicvocaapp.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.toeicvocaapp.R;
+import com.example.toeicvocaapp.adapter.TopicAdapter;
 import com.example.toeicvocaapp.db.DatabaseHelper;
 
 import java.util.List;
