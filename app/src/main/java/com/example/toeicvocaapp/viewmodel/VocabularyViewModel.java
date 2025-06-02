@@ -19,6 +19,7 @@ public class VocabularyViewModel extends AndroidViewModel {
     private MutableLiveData<List<Vocabulary>> vocabList;
     private MutableLiveData<List<Vocabulary>> learnedWords;
     private MutableLiveData<Integer> todayWordCount;
+    private MutableLiveData<List<String>> contributionDates;
 
     public VocabularyViewModel(Application application) {
         super(application);
@@ -28,6 +29,7 @@ public class VocabularyViewModel extends AndroidViewModel {
         todayWordCount = new MutableLiveData<>();
         updateTodayWordCount();
     }
+
 
     public LiveData<List<Vocabulary>> getVocabList() {
         return vocabList;
@@ -63,5 +65,20 @@ public class VocabularyViewModel extends AndroidViewModel {
     private void updateTodayWordCount() {
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         todayWordCount.setValue(repository.countWordsToday(today));
+    }
+
+    public LiveData<List<String>> getContributionDates(int year, int month) {
+        contributionDates = new MutableLiveData<>();
+        contributionDates.setValue(repository.getContributionDates(year, month));
+        return contributionDates;
+    }
+
+    public void markContribution(boolean completedTest) {
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        repository.markContribution(today, completedTest);
+    }
+
+    public boolean hasCompletedTest(String date) {
+        return repository.hasCompletedTest(date);
     }
 }

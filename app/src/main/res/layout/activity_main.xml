@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_margin="30dp"
     android:id="@+id/main">
@@ -11,13 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome!"
-        android:textSize="24sp" />
-
-    <Button
-        android:id="@+id/buttonClose"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Close App" />
+        android:textSize="24sp"
+        android:layout_marginBottom="16dp"
+        />
 
     <Button
         android:id="@+id/addTopicButton"
@@ -43,6 +40,13 @@
         android:max="10"
         android:progress="0"
         android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/contributionButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="View Contributions" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/topicRecyclerView"

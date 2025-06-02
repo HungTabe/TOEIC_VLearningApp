@@ -15,8 +15,12 @@ public class VocabularyRepository {
         dbHelper = new DatabaseHelper(context);
     }
 
-    public void initFromJson(Context context) {
+    public void initFromJson(Context context) throws Exception {
         dbHelper.initFromJson(context);
+    }
+
+    public void initDemoContributions() {
+        dbHelper.initDemoContributions();
     }
 
     public List<Topic> getAllTopics() {
@@ -45,5 +49,17 @@ public class VocabularyRepository {
 
     public List<Vocabulary> getLearnedWords(int topicId) {
         return dbHelper.getLearnedWords(topicId);
+    }
+
+    public void markContribution(String date, boolean completedTest) {
+        dbHelper.markContribution(date, completedTest);
+    }
+
+    public List<String> getContributionDates(int year, int month) {
+        return dbHelper.getContributionDates(year, month);
+    }
+
+    public boolean hasCompletedTest(String date) {
+        return dbHelper.hasCompletedTest(date);
     }
 }

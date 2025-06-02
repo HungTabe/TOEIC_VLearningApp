@@ -1,6 +1,8 @@
 package com.example.toeicvocaapp.viewmodel;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -14,16 +16,22 @@ import java.util.List;
 public class TopicViewModel extends AndroidViewModel {
     private VocabularyRepository repository;
     private MutableLiveData<List<Topic>> topicList;
+    private MutableLiveData<String> initError;
 
     public TopicViewModel(Application application) {
         super(application);
         repository = new VocabularyRepository(application);
         topicList = new MutableLiveData<>();
+        initError = new MutableLiveData<>();
         loadTopics();
     }
 
     public LiveData<List<Topic>> getTopicList() {
         return topicList;
+    }
+
+    public LiveData<String> getInitError() {
+        return initError;
     }
 
     public void loadTopics() {
@@ -36,7 +44,13 @@ public class TopicViewModel extends AndroidViewModel {
     }
 
     public void initFromJson() {
-        repository.initFromJson(getApplication());
-        loadTopics();
+        new Thread(() -> {
+            try {
+                repository.initFromJson(getApplication());
+                loadTopics();
+            } catch (Exception e) {
+                initError.postValue("Error loading JSON: " + e.getMessage());
+            }
+        }).start();
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.example.toeicvocaapp.db.DatabaseHelper;
 import com.example.toeicvocaapp.model.Topic;
 import com.example.toeicvocaapp.viewmodel.TopicViewModel;
 import com.example.toeicvocaapp.viewmodel.VocabularyViewModel;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewWelcome, progressText;
     private ProgressBar progressBar;
     private Button addTopicButton, buttonClose;
+    private Button contributionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         textViewWelcome = findViewById(R.id.textViewWelcome);
         progressText = findViewById(R.id.progressText);
         progressBar = findViewById(R.id.progressBar);
-        buttonClose = findViewById(R.id.buttonClose);
+        contributionButton = findViewById(R.id.contributionButton);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         topicViewModel = new ViewModelProvider(this).get(TopicViewModel.class);
         vocabViewModel = new ViewModelProvider(this).get(VocabularyViewModel.class);
 
-        // Load topics
+        // Load topics and handle errors
         topicViewModel.initFromJson();
         topicViewModel.getTopicList().observe(this, topics -> {
             adapter = new TopicAdapter(topics, topic -> {
@@ -62,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             });
             recyclerView.setAdapter(adapter);
+        });
+
+        topicViewModel.getInitError().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+            }
         });
 
         // Observe daily progress
@@ -82,6 +91,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Close button
         buttonClose.setOnClickListener(v -> finishAffinity());
+
+        // Contribution button
+        contributionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ContributionActivity.class);
+            startActivity(intent);
+        });
 
         // Handle window insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

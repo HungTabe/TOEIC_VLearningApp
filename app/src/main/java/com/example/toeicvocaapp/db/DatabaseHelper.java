@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -155,47 +156,123 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return learnedWords;
     }
 
-    public void initFromJson(Context context) {
-        try {
-            SQLiteDatabase db = getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_TOPICS, null);
-            cursor.moveToFirst();
-            if (cursor.getInt(0) > 0) { // Không thêm nếu đã có dữ liệu
-                cursor.close();
-                db.close();
-                return;
-            }
+    public void initFromJson(Context context) throws Exception {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_TOPICS, null);
+        cursor.moveToFirst();
+        if (cursor.getInt(0) > 0) {
             cursor.close();
-
-            // Đọc file JSON từ res/raw
-            InputStream is = context.getResources().openRawResource(R.raw.sample_data);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String json = new String(buffer, "UTF-8");
-
-            // Phân tích JSON
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject topicObj = jsonArray.getJSONObject(i);
-                String topicName = topicObj.getString("topic");
-                addTopic(topicName);
-                int topicId = i + 1; // Giả sử ID bắt đầu từ 1
-
-                JSONArray words = topicObj.getJSONArray("words");
-                for (int j = 0; j < words.length(); j++) {
-                    JSONObject word = words.getJSONObject(j);
-                    String english = word.getString("english");
-                    String vietnamese = word.getString("vietnamese");
-                    addVocabulary(topicId, english, vietnamese);
-                }
-            }
             db.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(context, "Error loading JSON: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            return;
         }
+        cursor.close();
+
+        InputStream is = context.getResources().openRawResource(R.raw.sample_data);
+        int size = is.available();
+        byte[] buffer = new byte[size];
+        is.read(buffer);
+        is.close();
+        String json = new String(buffer, "UTF-8");
+
+        JSONArray jsonArray = new JSONArray(json);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject topicObj = jsonArray.getJSONObject(i);
+            String topicName = topicObj.getString("topic");
+            addTopic(topicName);
+
+            Cursor topicCursor = db.rawQuery("SELECT " + COL_ID + " FROM " + TABLE_TOPICS + " WHERE " + COL_NAME + "=?", new String[]{topicName});
+            int topicId = -1;
+            if (topicCursor.moveToFirst()) {
+                topicId = topicCursor.getInt(0);
+            }
+            topicCursor.close();
+
+            JSONArray words = topicObj.getJSONArray("words");
+            for (int j = 0; j < words.length(); j++) {
+                JSONObject word = words.getJSONObject(j);
+                String english = word.getString("english");
+                String vietnamese = word.getString("vietnamese");
+                addVocabulary(topicId, english, vietnamese);
+            }
+        }
+
+        initDemoContributions();
+        db.close();
+    }
+
+    public void markContribution(String date, boolean completedTest) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_DATE, date);
+        values.put(COL_STATUS, completedTest ? "contributed_with_test" : "contributed_without_test");
+        db.insert(TABLE_PROGRESS, null, values);
+        db.close();
+    }
+
+    public List<String> getContributionDates(int year, int month) {
+        List<String> contributionDates = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT DISTINCT " + COL_DATE + " FROM " + TABLE_PROGRESS +
+                " WHERE " + COL_STATUS + " IN ('contributed_with_test', 'contributed_without_test') AND " +
+                " strftime('%Y', " + COL_DATE + ") = ? AND strftime('%m', " + COL_DATE + ") = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.format("%04d", year), String.format("%02d", month)});
+        while (cursor.moveToNext()) {
+            contributionDates.add(cursor.getString(0));
+        }
+        cursor.close();
+        db.close();
+        return contributionDates;
+    }
+
+    public boolean hasCompletedTest(String date) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(TABLE_PROGRESS, new String[]{COL_STATUS},
+                COL_DATE + "=? AND " + COL_STATUS + "=?", new String[]{date, "contributed_with_test"},
+                null, null, null);
+        boolean completed = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return completed;
+    }
+
+    // Thêm phương thức tạo demo data
+    public void initDemoContributions() {
+        SQLiteDatabase db = getWritableDatabase();
+        // Kiểm tra nếu đã có dữ liệu đóng góp
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_PROGRESS +
+                " WHERE " + COL_STATUS + " IN ('contributed_with_test', 'contributed_without_test')", null);
+        cursor.moveToFirst();
+        if (cursor.getInt(0) > 0) {
+            cursor.close();
+            return; // Không thêm nếu đã có dữ liệu
+        }
+        cursor.close();
+
+        // Tạo dữ liệu mẫu
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1; // Tháng bắt đầu từ 0
+
+        // Tháng hiện tại: 10 ngày đóng góp
+        int[] currentMonthDays = {1, 3, 5, 7, 9, 10, 12, 15, 18, 20};
+        for (int day : currentMonthDays) {
+            String date = String.format("%04d-%02d-%02d", currentYear, currentMonth, day);
+            boolean completedTest = (day % 2 == 0); // Ngẫu nhiên: ngày chẵn có bài test
+            markContribution(date, completedTest);
+        }
+
+        // Tháng trước: 5 ngày đóng góp
+        calendar.add(Calendar.MONTH, -1);
+        int prevMonth = calendar.get(Calendar.MONTH) + 1;
+        int prevYear = calendar.get(Calendar.YEAR);
+        int[] prevMonthDays = {2, 8, 14, 20, 25};
+        for (int day : prevMonthDays) {
+            String date = String.format("%04d-%02d-%02d", prevYear, prevMonth, day);
+            boolean completedTest = (day % 2 == 1); // Ngẫu nhiên: ngày lẻ có bài test
+            markContribution(date, completedTest);
+        }
+
+        db.close();
     }
 
 }
