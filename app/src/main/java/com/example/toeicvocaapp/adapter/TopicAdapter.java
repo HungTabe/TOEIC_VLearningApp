@@ -5,17 +5,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.toeicvocaapp.model.Topic;
+
 import java.util.List;
 
 public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> {
-    private List<String> topics;
+    private List<Topic> topics;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(Topic topic);
     }
 
-    public TopicAdapter(List<String> topics, OnItemClickListener listener) {
+    public TopicAdapter(List<Topic> topics, OnItemClickListener listener) {
         this.topics = topics;
         this.listener = listener;
     }
@@ -29,8 +32,9 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.textView.setText(topics.get(position));
-        holder.itemView.setOnClickListener(v -> listener.onItemClick(position));
+        Topic topic = topics.get(position);
+        holder.textView.setText(topic.getName());
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(topic));
     }
 
     @Override

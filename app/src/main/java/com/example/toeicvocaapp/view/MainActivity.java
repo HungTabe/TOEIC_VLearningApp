@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.toeicvocaapp.R;
 import com.example.toeicvocaapp.adapter.TopicAdapter;
 import com.example.toeicvocaapp.db.DatabaseHelper;
+import com.example.toeicvocaapp.model.Topic;
 
 import java.util.List;
 
@@ -75,10 +76,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateTopicList() {
-        List<String> topics = db.getAllTopics();
-        adapter = new TopicAdapter(topics, position -> {
+        List<Topic> topics = db.getAllTopics(); // Changed from List<String> to List<Topic>
+        adapter = new TopicAdapter(topics, topic -> { // Pass Topic object
             Intent intent = new Intent(MainActivity.this, VocabularyListActivity.class);
-            intent.putExtra("topic_id", position + 1);
+            intent.putExtra("topic_id", topic.getId()); // Use Topic's id
             startActivity(intent);
         });
         recyclerView.setAdapter(adapter);
